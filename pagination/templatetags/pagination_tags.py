@@ -13,6 +13,7 @@ register = template.Library()
 DEFAULT_PAGINATION = getattr(settings, 'PAGINATION_DEFAULT_PAGINATION', 20)
 DEFAULT_WINDOW = getattr(settings, 'PAGINATION_DEFAULT_WINDOW', 4)
 DEFAULT_ORPHANS = getattr(settings, 'PAGINATION_DEFAULT_ORPHANS', 0)
+DEFAULT_STYLE = getattr(settings, 'PAGINATION_DEFAULT_STYLE', '')
 INVALID_PAGE_RAISES_404 = getattr(settings,
     'PAGINATION_INVALID_PAGE_RAISES_404', False)
 
@@ -216,6 +217,7 @@ def paginate(context, window=DEFAULT_WINDOW):
     except KeyError, AttributeError:
         return {}
 
-register.inclusion_tag('pagination/pagination.html', takes_context=True)(
+PAGINATION_PATH = '%s/' % DEFAULT_STYLE if DEFAULT_STYLE else ''
+register.inclusion_tag('pagination/%spagination.html' % PAGINATION_PATH, takes_context=True)(
     paginate)
 register.tag('autopaginate', do_autopaginate)
